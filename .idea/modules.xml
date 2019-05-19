@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/aep21.iml" filepath="$PROJECT_DIR$/aep21.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../aep-prog-2.1/aep2.1programacao/src/main/main.iml" filepath="$PROJECT_DIR$/../aep-prog-2.1/aep2.1programacao/src/main/main.iml" />
     </modules>
   </component>
 </project>

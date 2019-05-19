@@ -29,22 +29,25 @@ public class Jurídica extends Pessoa {
             throw new RuntimeException("Não pode ser sócio dela mesma.");
         }
 
+        if (cotasSociedade.stream().anyMatch(cotaSociedade1 -> cotaSociedade1.sócio.equals(sócio))){
+            throw new RuntimeException("Sócio ja existe");
+        }
+
         CotaSociedade cotaSociedade = new CotaSociedade();
         cotaSociedade.sócio = sócio;
+
         if (percentualDeParticipação < 0) {
             throw new RuntimeException("percentual não pode ser negativo");
         }
+
         if (percentualDeParticipação + this.cotasSociedade
                 .stream()
                 .mapToDouble(cotaSociedade1 -> cotaSociedade1.percentualDeParticipação)
-                .sum() > this.capitalSocial) {
+                .sum() > 100D) {
             throw new RuntimeException("Participação maior que capital social");
         }
-        cotaSociedade.percentualDeParticipação = percentualDeParticipação;
 
-        if (cotasSociedade.stream().anyMatch(cotaSociedade1 -> cotaSociedade1.equals(cotaSociedade))){
-            throw new RuntimeException("Sócio ja existe");
-        }
+        cotaSociedade.percentualDeParticipação = percentualDeParticipação;
 
         this.cotasSociedade.add(cotaSociedade);
     }
