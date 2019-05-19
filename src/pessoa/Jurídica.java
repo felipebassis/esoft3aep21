@@ -1,6 +1,7 @@
 package pessoa;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,28 +24,33 @@ public class Jurídica extends Pessoa {
         this.capitalSocial = capitalSocial;
     }
 
-    public void adicionarSócio(Pessoa sócio, Double percentualDeParticipação){
-        if (super.equals(sócio)){
+    public void adicionarSócio(Pessoa sócio, Double percentualDeParticipação) {
+        if (super.equals(sócio)) {
             throw new RuntimeException("Não pode ser sócio dela mesma.");
         }
+
         CotaSociedade cotaSociedade = new CotaSociedade();
         cotaSociedade.sócio = sócio;
-        if (percentualDeParticipação < 0){
+        if (percentualDeParticipação < 0) {
             throw new RuntimeException("percentual não pode ser negativo");
         }
         if (percentualDeParticipação + this.cotasSociedade
                 .stream()
                 .mapToDouble(cotaSociedade1 -> cotaSociedade1.percentualDeParticipação)
-                .sum() > this.capitalSocial){
+                .sum() > this.capitalSocial) {
             throw new RuntimeException("Participação maior que capital social");
         }
         cotaSociedade.percentualDeParticipação = percentualDeParticipação;
 
-       this.cotasSociedade.add(cotaSociedade);
+        if (cotasSociedade.stream().anyMatch(cotaSociedade1 -> cotaSociedade1.equals(cotaSociedade))){
+            throw new RuntimeException("Sócio ja existe");
+        }
+
+        this.cotasSociedade.add(cotaSociedade);
     }
 
-    public void removerSócio(Pessoa sócio){
-        if (!this.cotasSociedade.remove(sócio)){
+    public void removerSócio(Pessoa sócio) {
+        if (!this.cotasSociedade.remove(sócio)) {
             throw new RuntimeException("Não foi possivel excluir socio");
         }
     }
@@ -55,5 +61,19 @@ public class Jurídica extends Pessoa {
         private Pessoa sócio;
 
         private Double percentualDeParticipação;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CotaSociedade that = (CotaSociedade) o;
+            return Objects.equals(sócio, that.sócio) &&
+                    Objects.equals(percentualDeParticipação, that.percentualDeParticipação);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(sócio, percentualDeParticipação);
+        }
     }
 }
